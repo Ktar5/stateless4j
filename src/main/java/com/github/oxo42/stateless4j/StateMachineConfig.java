@@ -108,8 +108,8 @@ public class StateMachineConfig<TState, TTrigger> {
         });
     }
 
-    public boolean isTriggerConfigured(TriggerWithParameters<TState, TTrigger> trigger) {
-        return triggerConfiguration.containsKey(trigger.getTrigger());
+    public boolean isTriggerConfigured(TTrigger trigger) {
+        return triggerConfiguration.containsKey(trigger);
     }
 
     private void saveTriggerConfiguration(TriggerWithParameters<TState, TTrigger> trigger) {
