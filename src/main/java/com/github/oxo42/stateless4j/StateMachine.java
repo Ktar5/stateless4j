@@ -184,7 +184,7 @@ public class StateMachine<S, T> {
     protected void publicFire(T trigger, Object... args) {
 
         if(Settings.LOG_TRANSITIONS){
-            Settings.DEBUG_LOGGER.debug("Firing trigger: {}.", trigger);
+            Settings.DEBUG_LOGGER.debug("Firing trigger: {}.", TriggerWithParameters.toString(trigger, args));
         }
 
         TriggerWithParameters<S, T> configuration = config.getTriggerConfiguration(trigger);
@@ -208,11 +208,12 @@ public class StateMachine<S, T> {
             getCurrentRepresentation().enter(transition, args);
         }
 
-        if (Settings.LOG_PARAMS) {
+        if (Settings.LOG_TRANSITIONS) {
             Settings.DEBUG_LOGGER.debug("Fired [{}]--{}-->[{}]", source,
                     TriggerWithParameters.toString(trigger, args),
                     destination.toString());
         }
+
     }
 
     /**

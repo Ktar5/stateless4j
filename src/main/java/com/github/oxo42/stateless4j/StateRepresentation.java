@@ -4,6 +4,8 @@ import com.github.oxo42.stateless4j.delegates.Action1;
 import com.github.oxo42.stateless4j.delegates.Action2;
 import com.github.oxo42.stateless4j.transitions.Transition;
 import com.github.oxo42.stateless4j.triggers.TriggerBehaviour;
+import com.github.oxo42.stateless4j.triggers.TriggerWithParameters;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -122,7 +124,11 @@ public class StateRepresentation<S, T> {
         assert entryArgs != null : "entryArgs is null";
         for (Action2<Transition<S, T>, Object[]> action : entryActions) {
             if(Settings.LOG_ENTRIES){
-                Settings.DEBUG_LOGGER.debug("Execute entry for transition: {}.", transition);
+                if (Settings.LOG_TRANSITIONS) {
+                    Settings.DEBUG_LOGGER.debug("onEntry [{}]--{}-->[{}]", transition.getSource(),
+                            TriggerWithParameters.toString(transition.getTrigger(), entryArgs),
+                            transition.getDestination().toString());
+                }
             }
             action.doIt(transition, entryArgs);
         }
@@ -132,7 +138,9 @@ public class StateRepresentation<S, T> {
         assert transition != null : "transition is null";
         for (Action1<Transition<S, T>> action : exitActions) {
             if(Settings.LOG_EXITS){
-                Settings.DEBUG_LOGGER.debug("Execute exits for transition: {}.", transition);
+                Settings.DEBUG_LOGGER.debug("onEntry [{}]--{}-->[{}]", transition.getSource(),
+                        TriggerWithParameters.toString(transition.getTrigger()),
+                        transition.getDestination().toString());
             }
             action.doIt(transition);
         }

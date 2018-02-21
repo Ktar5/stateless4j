@@ -1,5 +1,8 @@
 package com.github.oxo42.stateless4j.transitions;
 
+import com.github.oxo42.stateless4j.Settings;
+import com.github.oxo42.stateless4j.triggers.TriggerWithParameters;
+
 public class Transition<S, T> {
 
     private final S source;
@@ -54,4 +57,5 @@ public class Transition<S, T> {
     public boolean isReentry() {
         return getSource().equals(getDestination());
     }
+
 }
