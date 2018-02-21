@@ -5,8 +5,6 @@ import com.github.oxo42.stateless4j.delegates.Action2;
 import com.github.oxo42.stateless4j.delegates.Func;
 import com.github.oxo42.stateless4j.transitions.Transition;
 import com.github.oxo42.stateless4j.triggers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,8 @@ public class StateMachine<S, T> {
     protected final Action1<S> stateMutator;
     protected Action2<S, T> unhandledTriggerAction = new Action2<S, T>() {
 
-        public void doIt(S state, T trigger) {
+        @Override
+		public void doIt(S state, T trigger) {
             throw new IllegalStateException(
                     String.format(
                             "No valid leaving transitions are permitted from state '%s' for trigger '%s'. Consider ignoring the trigger.",
@@ -183,9 +182,11 @@ public class StateMachine<S, T> {
     }
 
     protected void publicFire(T trigger, Object... args) {
+
         if(Settings.LOG_TRANSITIONS){
-            Settings.DEBUG_LOGGER.debug("Firing trigger: {}. Args: {}", trigger, args);
+            Settings.DEBUG_LOGGER.debug("Firing trigger: {}.", trigger);
         }
+
         TriggerWithParameters<S, T> configuration = config.getTriggerConfiguration(trigger);
         if (configuration != null) {
             configuration.validateParameters(args);
@@ -205,6 +206,12 @@ public class StateMachine<S, T> {
             getCurrentRepresentation().exit(transition);
             setState(destination.get());
             getCurrentRepresentation().enter(transition, args);
+        }
+
+        if (Settings.LOG_PARAMS) {
+            Settings.DEBUG_LOGGER.debug("Fired [{}]--{}-->[{}]", source,
+                    TriggerWithParameters.toString(trigger, args),
+                    destination.toString());
         }
     }
 
