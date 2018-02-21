@@ -122,7 +122,7 @@ public class StateRepresentation<S, T> {
         assert entryArgs != null : "entryArgs is null";
         for (Action2<Transition<S, T>, Object[]> action : entryActions) {
             if(Settings.LOG_ENTRIES){
-                Settings.DEBUG_LOGGER.debug("Execute entry for transition: {}. Args: {}", transition, entryArgs);
+                Settings.DEBUG_LOGGER.debug("Execute entry for transition: {}.", transition);
             }
             action.doIt(transition, entryArgs);
         }
