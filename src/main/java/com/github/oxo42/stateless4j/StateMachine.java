@@ -18,12 +18,9 @@ import java.util.List;
  * @param <T> The type used to represent the triggers that cause state transitions
  */
 public class StateMachine<S, T> {
-
     protected final StateMachineConfig<S, T> config;
     protected final Func<S> stateAccessor;
     protected final Action1<S> stateMutator;
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    private boolean shouldLog = true;
     protected Action2<S, T> unhandledTriggerAction = new Action2<S, T>() {
 
         public void doIt(S state, T trigger) {
@@ -68,7 +65,7 @@ public class StateMachine<S, T> {
             }
         };
         if (config.isEntryActionOfInitialStateEnabled()) {
-            Transition<S,T> initialTransition = new Transition(initialState, initialState, null);
+            Transition<S, T> initialTransition = new Transition<>(initialState, initialState, null);
             getCurrentRepresentation().enter(initialTransition);
         }
     }
@@ -90,7 +87,7 @@ public class StateMachine<S, T> {
     public StateConfiguration<S, T> configure(S state) {
         return config.configure(state);
     }
-    
+
     public StateMachineConfig<S, T> configuration() {
         return config;
     }
@@ -108,22 +105,6 @@ public class StateMachine<S, T> {
         stateMutator.doIt(value);
     }
 
-    public boolean getShouldLog(){
-        return shouldLog;
-    }
-    
-    public void setShouldLog(boolean enabled){
-        shouldLog = enabled;
-    }
-    
-    public Logger getLogger(){
-        return logger;
-    }
-    
-    protected void log(T trigger, Object... args){
-        getLogger().info("Firing " + trigger);
-    }
-    
     /**
      * The currently-permissible trigger values
      *
@@ -202,8 +183,8 @@ public class StateMachine<S, T> {
     }
 
     protected void publicFire(T trigger, Object... args) {
-        if(shouldLog){
-            log(trigger, args);
+        if(Settings.LOG_TRANSITIONS){
+            Settings.DEBUG_LOGGER.debug("Firing trigger: {}. Args: {}", trigger, args);
         }
         TriggerWithParameters<S, T> configuration = config.getTriggerConfiguration(trigger);
         if (configuration != null) {

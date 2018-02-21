@@ -121,6 +121,9 @@ public class StateRepresentation<S, T> {
         assert transition != null : "transition is null";
         assert entryArgs != null : "entryArgs is null";
         for (Action2<Transition<S, T>, Object[]> action : entryActions) {
+            if(Settings.LOG_ENTRIES){
+                Settings.DEBUG_LOGGER.debug("Execute entry for transition: {}. Args: {}", transition, entryArgs);
+            }
             action.doIt(transition, entryArgs);
         }
     }
@@ -128,6 +131,9 @@ public class StateRepresentation<S, T> {
     void executeExitActions(Transition<S, T> transition) {
         assert transition != null : "transition is null";
         for (Action1<Transition<S, T>> action : exitActions) {
+            if(Settings.LOG_EXITS){
+                Settings.DEBUG_LOGGER.debug("Execute exits for transition: {}.", transition);
+            }
             action.doIt(transition);
         }
     }
@@ -172,7 +178,6 @@ public class StateRepresentation<S, T> {
         return this.state.equals(stateToCheck) || (superstate != null && superstate.isIncludedIn(stateToCheck));
     }
 
-    @SuppressWarnings("unchecked")
     public List<T> getPermittedTriggers() {
         Set<T> result = new HashSet<>();
 
