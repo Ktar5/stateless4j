@@ -124,11 +124,9 @@ public class StateRepresentation<S, T> {
         assert entryArgs != null : "entryArgs is null";
         for (Action2<Transition<S, T>, Object[]> action : entryActions) {
             if(Settings.LOG_ENTRIES){
-                if (Settings.LOG_TRANSITIONS) {
                     Settings.DEBUG_LOGGER.debug("onEntry [{}]--{}-->[{}]", transition.getSource(),
                             TriggerWithParameters.toString(transition.getTrigger(), entryArgs),
                             transition.getDestination().toString());
-                }
             }
             action.doIt(transition, entryArgs);
         }
@@ -138,7 +136,7 @@ public class StateRepresentation<S, T> {
         assert transition != null : "transition is null";
         for (Action1<Transition<S, T>> action : exitActions) {
             if(Settings.LOG_EXITS){
-                Settings.DEBUG_LOGGER.debug("onEntry [{}]--{}-->[{}]", transition.getSource(),
+                Settings.DEBUG_LOGGER.debug("onExit [{}]--{}-->[{}]", transition.getSource(),
                         TriggerWithParameters.toString(transition.getTrigger()),
                         transition.getDestination().toString());
             }
